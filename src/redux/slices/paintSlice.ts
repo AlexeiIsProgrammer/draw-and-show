@@ -22,9 +22,15 @@ const paintSlice = createSlice({
     setTool: (state, { payload }: PayloadAction<Tool>) => {
       state.tool = payload;
     },
+    setToolColor: (state, { payload }: PayloadAction<string>) => {
+      if (state.tool?.ctx) {
+        state.tool.ctx.strokeStyle = payload;
+        state.tool.ctx.fillStyle = payload;
+      }
+    },
   },
 });
 
 export default paintSlice.reducer;
-export const { setCanvas, setTool } = paintSlice.actions;
+export const { setCanvas, setTool, setToolColor } = paintSlice.actions;
 export const paintSelector = (state: RootState) => state.paint;

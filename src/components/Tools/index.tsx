@@ -22,7 +22,7 @@ import {
 
 import styles from './Tools.module.scss';
 import { useAppDispatch, useAppSelector } from '@/redux';
-import { paintSelector, setTool } from '@/redux/slices/paintSlice';
+import { paintSelector, setTool, setToolColor } from '@/redux/slices/paintSlice';
 import Rectangle from '@/tools/Rectangle';
 import Brush from '@/tools/Brush';
 import Eraser from '@/tools/Eraser';
@@ -33,9 +33,9 @@ type ToolsProps = {
 };
 
 function Tools({ opened, close }: ToolsProps) {
-  const { canvas } = useAppSelector(paintSelector);
+  const { canvas, tool } = useAppSelector(paintSelector);
   const dispatch = useAppDispatch();
-  const [color, setColor] = useState('');
+
   return (
     <Drawer
       withCloseButton={false}
@@ -102,10 +102,10 @@ function Tools({ opened, close }: ToolsProps) {
           <ColorSwatch
             key={colorItem}
             color={colorItem}
-            onClick={() => setColor(colorItem)}
+            onClick={() => setToolColor(colorItem)}
             className={styles.swatch}
           >
-            {color === colorItem && <CheckIcon size="1rem" color="white" />}
+            {tool?.ctx?.strokeStyle === colorItem && <CheckIcon size="1rem" color="white" />}
           </ColorSwatch>
         ))}
       </Stack>
