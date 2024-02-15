@@ -1,5 +1,17 @@
-import { createTheme } from '@mantine/core';
+import { ColorSwatch, createTheme } from '@mantine/core';
 
 export const theme = createTheme({
-  /** Put your mantine theme override here */
+  components: {
+    ColorPicker: ColorSwatch.extend({
+      classNames: {
+        root: '.mantine-ColorPicker-swatch',
+      },
+      styles: {
+        root: {
+          width: '10px',
+          height: '10px',
+        },
+      },
+    }),
+  },
 });
