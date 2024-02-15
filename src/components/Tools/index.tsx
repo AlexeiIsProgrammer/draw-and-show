@@ -2,25 +2,30 @@ import React, { useState } from 'react';
 import {
   ActionIcon,
   CheckIcon,
-  ColorPicker,
   ColorSwatch,
   DEFAULT_THEME,
   Divider,
   Drawer,
-  HueSlider,
   Stack,
   Tooltip,
 } from '@mantine/core';
 import {
+  IconBrush,
   IconCircle,
   IconEraser,
   IconFileExport,
   IconLayoutBoard,
   IconLetterCase,
+  IconPencil,
   IconRectangle,
 } from '@tabler/icons-react';
 
 import styles from './Tools.module.scss';
+import { useAppDispatch, useAppSelector } from '@/redux';
+import { paintSelector, setTool } from '@/redux/slices/paintSlice';
+import Rectangle from '@/tools/Rectangle';
+import Brush from '@/tools/Brush';
+import Eraser from '@/tools/Eraser';
 
 type ToolsProps = {
   opened: boolean;
@@ -28,6 +33,8 @@ type ToolsProps = {
 };
 
 function Tools({ opened, close }: ToolsProps) {
+  const { canvas } = useAppSelector(paintSelector);
+  const dispatch = useAppDispatch();
   const [color, setColor] = useState('');
   return (
     <Drawer
@@ -52,7 +59,7 @@ function Tools({ opened, close }: ToolsProps) {
         <Divider my="md" />
 
         <Tooltip label="Eraser">
-          <ActionIcon>
+          <ActionIcon onClick={() => dispatch(setTool(new Eraser(canvas)))}>
             <IconEraser />
           </ActionIcon>
         </Tooltip>
@@ -63,8 +70,14 @@ function Tools({ opened, close }: ToolsProps) {
           </ActionIcon>
         </Tooltip>
 
+        <Tooltip label="Brush">
+          <ActionIcon onClick={() => dispatch(setTool(new Brush(canvas)))}>
+            <IconBrush />
+          </ActionIcon>
+        </Tooltip>
+
         <Tooltip label="Rectangle">
-          <ActionIcon>
+          <ActionIcon onClick={() => dispatch(setTool(new Rectangle(canvas)))}>
             <IconRectangle />
           </ActionIcon>
         </Tooltip>
@@ -87,6 +100,7 @@ function Tools({ opened, close }: ToolsProps) {
           DEFAULT_THEME.colors.violet[4],
         ].map((colorItem) => (
           <ColorSwatch
+            key={colorItem}
             color={colorItem}
             onClick={() => setColor(colorItem)}
             className={styles.swatch}
