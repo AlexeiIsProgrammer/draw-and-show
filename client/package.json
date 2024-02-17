@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "prod": "vite dist --host",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "npm run lint:eslint --fix && npm run lint:stylelint",
@@ -24,6 +25,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@tabler/icons-react": "^2.47.0",
     "axios": "^1.6.7",
+    "firebase": "^10.8.0",
     "konva": "^9.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
