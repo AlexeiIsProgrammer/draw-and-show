@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp _redirects build/_redirects",
+    "build": "tsc && vite build",
     "prod": "vite dist --host",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
