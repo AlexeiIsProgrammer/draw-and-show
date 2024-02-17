@@ -53,7 +53,7 @@ function DrawCanvas() {
     };
   }, []);
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: any) => {
     if (e.evt.ctrlKey && e.evt.button === 0) {
       setIsMoving(true);
       setStartPosition({ x: e.evt.clientX, y: e.evt.clientY });
@@ -121,7 +121,7 @@ function DrawCanvas() {
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: any) => {
     if (isMoving) {
       const deltaX = e.evt.clientX - startPosition.x;
       const deltaY = e.evt.clientY - startPosition.y;
@@ -183,7 +183,7 @@ function DrawCanvas() {
     }
   };
 
-  const handleMouseUp = (e) => {
+  const handleMouseUp = () => {
     setIsDrawing(false);
     setIsMoving(false);
   };

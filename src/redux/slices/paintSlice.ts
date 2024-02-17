@@ -4,7 +4,6 @@ import { RootState } from '..';
 type ToolOptions = {
   name: 'brush' | 'eraser' | 'rect' | 'circle' | 'text';
   color: string;
-  size: number;
 };
 
 type InitialState = {
@@ -19,7 +18,6 @@ const initialState: InitialState = {
   tool: {
     name: 'brush',
     color: '#fff',
-    size: 2,
   },
   image: '',
   isNotifyShowing: { name: '', isNotify: false },
@@ -34,9 +32,7 @@ const paintSlice = createSlice({
     },
     setToolConfig: (
       state,
-      {
-        payload: { property, value },
-      }: PayloadAction<{ property: keyof ToolOptions; value: string | number }>
+      { payload: { property, value } }: PayloadAction<{ property: 'color'; value: string }>
     ) => {
       state.tool[property] = value;
     },
