@@ -1,36 +1,42 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
-import Tool from '@/tools/Tool';
+
+type ToolOptions = {
+  color: string;
+  size: string;
+};
 
 type InitialState = {
-  canvas: HTMLCanvasElement | null;
-  tool: Tool | null;
+  username: string;
+  tool: ToolOptions;
 };
 
 const initialState: InitialState = {
-  canvas: null,
-  tool: null,
+  username: '',
+  tool: {
+    color: '#ffffff',
+    size: '',
+  },
 };
 
 const paintSlice = createSlice({
   name: 'paint',
   initialState,
   reducers: {
-    setCanvas: (state, { payload }: PayloadAction<HTMLCanvasElement>) => {
-      state.canvas = payload;
+    setUsername: (state, { payload }: PayloadAction<string>) => {
+      state.username = payload;
     },
-    setTool: (state, { payload }: PayloadAction<Tool>) => {
-      state.tool = payload;
-    },
-    setToolColor: (state, { payload }: PayloadAction<string>) => {
-      if (state.tool?.ctx) {
-        state.tool.ctx.strokeStyle = payload;
-        state.tool.ctx.fillStyle = payload;
-      }
+    setToolConfig: (
+      state,
+      {
+        payload: { property, value },
+      }: PayloadAction<{ property: keyof ToolOptions; value: string }>
+    ) => {
+      state.tool[property] = value;
     },
   },
 });
 
 export default paintSlice.reducer;
-export const { setCanvas, setTool, setToolColor } = paintSlice.actions;
+export const { setUsername } = paintSlice.actions;
 export const paintSelector = (state: RootState) => state.paint;

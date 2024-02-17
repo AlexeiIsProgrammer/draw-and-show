@@ -7,5 +7,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-param-reassign': 'off',
     'import/no-cycle': 'off',
+    'import/extensions': 'off',
   },
 };

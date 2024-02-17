@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   ActionIcon,
   CheckIcon,
@@ -16,16 +15,13 @@ import {
   IconFileExport,
   IconLayoutBoard,
   IconLetterCase,
-  IconPencil,
   IconRectangle,
 } from '@tabler/icons-react';
 
 import styles from './Tools.module.scss';
 import { useAppDispatch, useAppSelector } from '@/redux';
-import { paintSelector, setTool, setToolColor } from '@/redux/slices/paintSlice';
-import Rectangle from '@/tools/Rectangle';
-import Brush from '@/tools/Brush';
-import Eraser from '@/tools/Eraser';
+import { paintSelector } from '@/redux/slices/paintSlice';
+import { useState } from 'react';
 
 type ToolsProps = {
   opened: boolean;
@@ -33,8 +29,10 @@ type ToolsProps = {
 };
 
 function Tools({ opened, close }: ToolsProps) {
-  const { canvas, tool } = useAppSelector(paintSelector);
+  const { session } = useAppSelector(paintSelector);
   const dispatch = useAppDispatch();
+
+  const [toolColor, setToolColor] = useState();
 
   return (
     <Drawer
@@ -59,7 +57,7 @@ function Tools({ opened, close }: ToolsProps) {
         <Divider my="md" />
 
         <Tooltip label="Eraser">
-          <ActionIcon onClick={() => dispatch(setTool(new Eraser(canvas)))}>
+          <ActionIcon>
             <IconEraser />
           </ActionIcon>
         </Tooltip>
@@ -71,13 +69,13 @@ function Tools({ opened, close }: ToolsProps) {
         </Tooltip>
 
         <Tooltip label="Brush">
-          <ActionIcon onClick={() => dispatch(setTool(new Brush(canvas)))}>
+          <ActionIcon>
             <IconBrush />
           </ActionIcon>
         </Tooltip>
 
         <Tooltip label="Rectangle">
-          <ActionIcon onClick={() => dispatch(setTool(new Rectangle(canvas)))}>
+          <ActionIcon>
             <IconRectangle />
           </ActionIcon>
         </Tooltip>
@@ -104,9 +102,7 @@ function Tools({ opened, close }: ToolsProps) {
             color={colorItem}
             onClick={() => setToolColor(colorItem)}
             className={styles.swatch}
-          >
-            {tool?.ctx?.strokeStyle === colorItem && <CheckIcon size="1rem" color="white" />}
-          </ColorSwatch>
+          />
         ))}
       </Stack>
     </Drawer>
