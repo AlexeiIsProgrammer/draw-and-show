@@ -22,8 +22,12 @@ function BoardCard({ board, ind }: BoardCardProps) {
       padding="xl"
       component="li"
     >
-      <Card.Section>
-        {board.image ? <Image src={board.image} h={160} alt="Board image" /> : <Box h={160} />}
+      <Card.Section className={styles.filled}>
+        {board.image ? (
+          <Image className={styles.image} src={board.image} h={160} alt="Board image" />
+        ) : (
+          <Box h={160} />
+        )}
       </Card.Section>
 
       <Text fw={500} size="lg" mt="md">

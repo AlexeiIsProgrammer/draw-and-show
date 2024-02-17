@@ -29,9 +29,18 @@ type ToolsProps = {
 };
 
 function Tools({ opened, close }: ToolsProps) {
-  const { tool } = useAppSelector(paintSelector);
+  const { tool, image } = useAppSelector(paintSelector);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const exportToJPEG = () => {
+    const link = document.createElement('a');
+    link.download = 'Your little board.jpg';
+    link.href = image;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <Drawer
@@ -49,7 +58,7 @@ function Tools({ opened, close }: ToolsProps) {
           </ActionIcon>
         </Tooltip>
         <Tooltip label="Export JPEG">
-          <ActionIcon>
+          <ActionIcon onClick={() => exportToJPEG()}>
             <IconFileExport />
           </ActionIcon>
         </Tooltip>
@@ -65,14 +74,13 @@ function Tools({ opened, close }: ToolsProps) {
           </ActionIcon>
         </Tooltip>
 
-        <Tooltip label="Text">
-          <ActionIcon
-            className={tool.name === 'text' ? styles.active : ''}
-            onClick={() => dispatch(setTool({ ...tool, name: 'text' }))}
-          >
-            <IconLetterCase />
-          </ActionIcon>
-        </Tooltip>
+        <ActionIcon
+          disabled
+          className={tool.name === 'text' ? styles.active : ''}
+          onClick={() => dispatch(setTool({ ...tool, name: 'text' }))}
+        >
+          <IconLetterCase />
+        </ActionIcon>
 
         <Tooltip label="Brush">
           <ActionIcon

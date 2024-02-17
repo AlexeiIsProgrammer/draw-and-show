@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, Center, Container, Flex, Grid, Stack, Text } from '@mantine/core';
+import { Button, Center, Container, Flex, Grid, Stack, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 import NameModal from '@/components/NameModal';
@@ -23,7 +23,6 @@ function Boards() {
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_BASE_URL);
-    console.log('connected');
 
     socketRef.current.on('boardsData', (data: BoardData[]) => {
       setBoards(data);

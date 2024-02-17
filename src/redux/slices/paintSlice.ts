@@ -10,15 +10,19 @@ type ToolOptions = {
 type InitialState = {
   username: string;
   tool: ToolOptions;
+  image: string;
+  isNotifyShowing: { name: string; isNotify: boolean };
 };
 
 const initialState: InitialState = {
   username: '',
   tool: {
     name: 'brush',
-    color: '#ffffff',
+    color: '#fff',
     size: 2,
   },
+  image: '',
+  isNotifyShowing: { name: '', isNotify: false },
 };
 
 const paintSlice = createSlice({
@@ -39,9 +43,25 @@ const paintSlice = createSlice({
     setTool: (state, { payload }: PayloadAction<ToolOptions>) => {
       state.tool = payload;
     },
+    setImage: (state, { payload }: PayloadAction<string>) => {
+      state.image = payload;
+    },
+    setIsNotifyShowing: (state, { payload }: PayloadAction<string>) => {
+      state.isNotifyShowing = { name: payload, isNotify: true };
+    },
+    closeNotifyShowing: (state) => {
+      state.isNotifyShowing = { name: '', isNotify: false };
+    },
   },
 });
 
 export default paintSlice.reducer;
-export const { setUsername, setToolConfig, setTool } = paintSlice.actions;
+export const {
+  setUsername,
+  setToolConfig,
+  setTool,
+  setImage,
+  setIsNotifyShowing,
+  closeNotifyShowing,
+} = paintSlice.actions;
 export const paintSelector = (state: RootState) => state.paint;

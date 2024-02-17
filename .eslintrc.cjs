@@ -8,5 +8,6 @@ module.exports = {
     'no-param-reassign': 'off',
     'import/no-cycle': 'off',
     'import/extensions': 'off',
+    'no-case-declarations': 'off',
   },
 };
