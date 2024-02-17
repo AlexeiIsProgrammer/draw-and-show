@@ -17,11 +17,11 @@ import {
   IconLetterCase,
   IconRectangle,
 } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './Tools.module.scss';
 import { useAppDispatch, useAppSelector } from '@/redux';
-import { paintSelector } from '@/redux/slices/paintSlice';
-import { useState } from 'react';
+import { paintSelector, setTool, setToolConfig } from '@/redux/slices/paintSlice';
 
 type ToolsProps = {
   opened: boolean;
@@ -29,13 +29,13 @@ type ToolsProps = {
 };
 
 function Tools({ opened, close }: ToolsProps) {
-  const { session } = useAppSelector(paintSelector);
+  const { tool } = useAppSelector(paintSelector);
   const dispatch = useAppDispatch();
-
-  const [toolColor, setToolColor] = useState();
+  const navigate = useNavigate();
 
   return (
     <Drawer
+      withOverlay={false}
       withCloseButton={false}
       size={65}
       opened={opened}
@@ -44,7 +44,7 @@ function Tools({ opened, close }: ToolsProps) {
     >
       <Stack className={styles.stack}>
         <Tooltip label="Boards">
-          <ActionIcon>
+          <ActionIcon onClick={() => navigate('/')}>
             <IconLayoutBoard />
           </ActionIcon>
         </Tooltip>
@@ -57,31 +57,46 @@ function Tools({ opened, close }: ToolsProps) {
         <Divider my="md" />
 
         <Tooltip label="Eraser">
-          <ActionIcon>
+          <ActionIcon
+            className={tool.name === 'eraser' ? styles.active : ''}
+            onClick={() => dispatch(setTool({ ...tool, name: 'eraser' }))}
+          >
             <IconEraser />
           </ActionIcon>
         </Tooltip>
 
         <Tooltip label="Text">
-          <ActionIcon>
+          <ActionIcon
+            className={tool.name === 'text' ? styles.active : ''}
+            onClick={() => dispatch(setTool({ ...tool, name: 'text' }))}
+          >
             <IconLetterCase />
           </ActionIcon>
         </Tooltip>
 
         <Tooltip label="Brush">
-          <ActionIcon>
+          <ActionIcon
+            className={tool.name === 'brush' ? styles.active : ''}
+            onClick={() => dispatch(setTool({ ...tool, name: 'brush' }))}
+          >
             <IconBrush />
           </ActionIcon>
         </Tooltip>
 
         <Tooltip label="Rectangle">
-          <ActionIcon>
+          <ActionIcon
+            className={tool.name === 'rect' ? styles.active : ''}
+            onClick={() => dispatch(setTool({ ...tool, name: 'rect' }))}
+          >
             <IconRectangle />
           </ActionIcon>
         </Tooltip>
 
         <Tooltip label="Circle">
-          <ActionIcon>
+          <ActionIcon
+            className={tool.name === 'circle' ? styles.active : ''}
+            onClick={() => dispatch(setTool({ ...tool, name: 'circle' }))}
+          >
             <IconCircle />
           </ActionIcon>
         </Tooltip>
@@ -89,19 +104,20 @@ function Tools({ opened, close }: ToolsProps) {
         <Divider my="md" />
 
         {[
-          DEFAULT_THEME.colors.dark[8],
+          DEFAULT_THEME.white,
           DEFAULT_THEME.colors.red[8],
           DEFAULT_THEME.colors.green[8],
           DEFAULT_THEME.colors.blue[8],
           DEFAULT_THEME.colors.pink[6],
           DEFAULT_THEME.colors.yellow[5],
-          DEFAULT_THEME.colors.violet[4],
         ].map((colorItem) => (
           <ColorSwatch
             key={colorItem}
             color={colorItem}
-            onClick={() => setToolColor(colorItem)}
-            className={styles.swatch}
+            onClick={() => dispatch(setToolConfig({ property: 'color', value: colorItem }))}
+            className={[styles.swatch, colorItem === tool.color ? styles['active-color'] : ''].join(
+              ' '
+            )}
           />
         ))}
       </Stack>

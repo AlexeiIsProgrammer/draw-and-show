@@ -1,5 +1,6 @@
 import { Layer, Line, Stage } from 'react-konva';
 import { Socket, io } from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/redux';
@@ -10,36 +11,47 @@ interface Point {
   y: number;
 }
 
+type DrawingLines = { id: string; points: Point[] };
+
 interface DrawingData {
-  lines: { id: string; points: Point[] }[];
+  id: string;
+  lines: DrawingLines[];
 }
 
 function DrawCanvas() {
+  const { id: boardId } = useParams();
+
   const { username, tool } = useAppSelector(paintSelector);
 
   const stageRef = useRef<any>(null);
-  const [lines, setLines] = useState<{ id: string; points: Point[] }[]>([]);
+  const [lines, setLines] = useState<DrawingLines[]>([]);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [scale, setScale] = useState(1);
   const [mouseDown, setMouseDown] = useState<boolean>(false);
   const [ctrlPressed, setCtrlPressed] = useState<boolean>(false);
-  const [strokeWidth, setStrokeWidth] = useState<number>(2);
   const [prevPointerPos, setPrevPointerPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     socketRef.current = io('http://localhost:4000');
+
+    socketRef.current.emit('joinBoard', boardId);
+
     socketRef.current.on('drawingData', (data: DrawingData) => {
       setLines(data.lines);
     });
 
     return () => {
+      const base64Board = stageRef.current?.toDataURL();
+      if (base64Board) {
+        socketRef.current?.emit('saveBoard', { boardId, base64Board });
+      }
       socketRef.current?.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = () => {
       if (mouseDown && ctrlPressed) {
         const stage = stageRef.current;
         const pos = stage.getPointerPosition();
@@ -84,13 +96,12 @@ function DrawCanvas() {
           x: point.x / scale,
           y: point.y / scale,
         };
-        console.log(stage.getPointerPosition());
         setLines([...lines, { id, points: [scaledPoint] }]);
       }
     }
   };
 
-  const handleMouseMove = (e: any) => {
+  const handleMouseMove = () => {
     if (!isDrawing) return;
 
     const stage = stageRef.current;
@@ -104,7 +115,8 @@ function DrawCanvas() {
       };
       lastLine.points = [...lastLine.points, scaledPoint];
       setLines(updatedLines);
-      socketRef.current?.emit('drawing', { lines: updatedLines });
+      const image = stage.toDataURL();
+      socketRef.current?.emit('drawing', { boardId, lines: updatedLines, image });
     }
   };
 
@@ -129,6 +141,8 @@ function DrawCanvas() {
 
     stage.scale({ x: newScale, y: newScale });
 
+    stage.absolutePosition({ x: 2, y: 2 });
+
     const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale,
@@ -140,6 +154,7 @@ function DrawCanvas() {
   return (
     <div>
       <Stage
+        absolutePosition={0}
         width={window.innerWidth}
         height={window.innerHeight}
         onWheel={handleWheel}
@@ -158,8 +173,8 @@ function DrawCanvas() {
             <Line
               key={line.id}
               points={line.points.flatMap((point) => [point.x * scale, point.y * scale])}
-              stroke="#ffffff"
-              strokeWidth={strokeWidth / scale}
+              stroke={tool.color}
+              strokeWidth={tool.size}
               tension={0.5}
               lineCap="round"
               globalCompositeOperation="source-over"

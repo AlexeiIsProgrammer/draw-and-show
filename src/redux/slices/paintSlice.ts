@@ -2,8 +2,9 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
 
 type ToolOptions = {
+  name: 'brush' | 'eraser' | 'rect' | 'circle' | 'text';
   color: string;
-  size: string;
+  size: number;
 };
 
 type InitialState = {
@@ -14,8 +15,9 @@ type InitialState = {
 const initialState: InitialState = {
   username: '',
   tool: {
+    name: 'brush',
     color: '#ffffff',
-    size: '',
+    size: 2,
   },
 };
 
@@ -30,13 +32,16 @@ const paintSlice = createSlice({
       state,
       {
         payload: { property, value },
-      }: PayloadAction<{ property: keyof ToolOptions; value: string }>
+      }: PayloadAction<{ property: keyof ToolOptions; value: string | number }>
     ) => {
       state.tool[property] = value;
+    },
+    setTool: (state, { payload }: PayloadAction<ToolOptions>) => {
+      state.tool = payload;
     },
   },
 });
 
 export default paintSlice.reducer;
-export const { setUsername } = paintSlice.actions;
+export const { setUsername, setToolConfig, setTool } = paintSlice.actions;
 export const paintSelector = (state: RootState) => state.paint;

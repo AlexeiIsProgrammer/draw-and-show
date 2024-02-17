@@ -7,6 +7,7 @@ import { store } from '@/redux';
 
 import { theme } from '../theme';
 import Main from '../components/pages/Main';
+import Boards from '@/components/pages/Boards';
 
 export default function App() {
   return (
@@ -14,8 +15,9 @@ export default function App() {
       <Provider store={store}>
         <BrowserRouter>
           <Routes>
-            <Route path="/:id" element={<Main />} />
-            <Route path="/*" element={<Navigate to={(+new Date()).toString(16)} />} />
+            <Route path="/boards" element={<Boards />} />
+            <Route path="/boards/:id" element={<Main />} />
+            <Route path="/*" element={<Navigate to="/boards" />} />
           </Routes>
         </BrowserRouter>
       </Provider>
