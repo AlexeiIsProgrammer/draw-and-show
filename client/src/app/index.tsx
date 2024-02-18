@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
@@ -9,6 +9,8 @@ import Main from '../components/pages/Main';
 import Boards from '@/components/pages/Boards';
 
 export default function App() {
+  const { id } = useParams();
+
   return (
     <MantineProvider defaultColorScheme="dark" withCssVariables>
       <Provider store={store}>
@@ -16,7 +18,7 @@ export default function App() {
           <Routes>
             <Route path="/boards" element={<Boards />} />
             <Route path="/boards/:id" element={<Main />} />
-            <Route path="/*" element={<Navigate to="/boards/:id" />} />
+            <Route path="/*" element={<Navigate to={`/boards/${id}`} />} />
           </Routes>
         </BrowserRouter>
       </Provider>
