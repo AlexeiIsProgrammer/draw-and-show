@@ -12,7 +12,7 @@ export default function App() {
   return (
     <MantineProvider defaultColorScheme="dark" withCssVariables>
       <Provider store={store}>
-        <HashRouter basename="/boards/:id">
+        <HashRouter basename="/boards">
           <Routes>
             <Route path="/boards" element={<Boards />} />
             <Route path="/boards/:id" element={<Main />} />
