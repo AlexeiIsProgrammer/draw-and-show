@@ -18,7 +18,7 @@ export default function App() {
           <Routes>
             <Route path="/boards" element={<Boards />} />
             <Route path="/boards/:id" element={<Main />} />
-            <Route path="/*" element={<Navigate to={`/boards/${id}`} />} />
+            <Route path="/*" element={<Navigate to="/boards" />} />
           </Routes>
         </BrowserRouter>
       </Provider>
