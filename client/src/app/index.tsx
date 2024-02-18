@@ -5,13 +5,12 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { store } from '@/redux';
 
-import { theme } from '../theme';
 import Main from '../components/pages/Main';
 import Boards from '@/components/pages/Boards';
 
 export default function App() {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider defaultColorScheme="dark" withCssVariables>
       <Provider store={store}>
         <BrowserRouter>
           <Routes>
