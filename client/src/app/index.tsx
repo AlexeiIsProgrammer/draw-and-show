@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, HashRouter } from 'react-router-dom';
 
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
@@ -12,13 +12,13 @@ export default function App() {
   return (
     <MantineProvider defaultColorScheme="dark" withCssVariables>
       <Provider store={store}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/boards" element={<Boards />} />
             <Route path="/boards/:id" element={<Main />} />
             <Route path="/*" element={<Navigate to="/boards" />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </Provider>
     </MantineProvider>
   );
