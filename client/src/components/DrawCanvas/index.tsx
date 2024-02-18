@@ -178,6 +178,7 @@ function DrawCanvas() {
         }
 
         const image = stage.toDataURL();
+        dispatch(setImage(image));
         socketRef.current?.emit('drawing', { boardId, shapes: updatedShapes, image });
       }
     }

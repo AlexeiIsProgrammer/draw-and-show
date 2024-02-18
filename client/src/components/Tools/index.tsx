@@ -34,9 +34,22 @@ function Tools({ opened, close }: ToolsProps) {
   const navigate = useNavigate();
 
   const exportToJPEG = () => {
+    const base64ImageData = image.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
+
+    const binaryBlob = atob(base64ImageData);
+
+    const arrayBuffer = new ArrayBuffer(binaryBlob.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < binaryBlob.length; i += 1) {
+      uint8Array[i] = binaryBlob.charCodeAt(i);
+    }
+
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+
     const link = document.createElement('a');
     link.download = 'Your little board.jpg';
-    link.href = image;
+    link.href = URL.createObjectURL(blob);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
